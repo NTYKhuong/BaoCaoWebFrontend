@@ -6,7 +6,7 @@ const ProductsList = () => {
     {
       product_id: "P001",
       product_name: "Sản phẩm A",
-      image_path: "src/assets/nu1.png",
+      image_path: "src/assets/nu1.png", // Đảm bảo đường dẫn đúng
       inventory_quantity: 100,
       original_price: 200000,
       sale_price: 180000,
@@ -18,7 +18,7 @@ const ProductsList = () => {
     {
       product_id: "P002",
       product_name: "Sản phẩm B",
-      image_path: "/images/product_b.jpg",
+      image_path: "src/assets/product_b.jpg", // Đảm bảo đường dẫn đúng
       inventory_quantity: 50,
       original_price: 300000,
       sale_price: 250000,
@@ -50,9 +50,9 @@ const ProductsList = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((product) => (
+          {products.map((product, index) => (
             <TableRow key={product.product_id}>
-              <TableCell>{product.product_id}</TableCell>
+              <TableCell>{index + 1}</TableCell>
               <TableCell>{product.product_name}</TableCell>
               <TableCell>
                 <img src={product.image_path} alt={product.product_name} style={{ width: "50px", height: "50px" }} />

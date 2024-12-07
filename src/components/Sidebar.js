@@ -1,6 +1,7 @@
 import React from "react";
 import { List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
 import { ShoppingCart, People, Category, Assignment, ExitToApp } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 import avatar from '../assets/nu1.png'; 
 
 const Sidebar = () => {
@@ -15,19 +16,19 @@ const Sidebar = () => {
         />
       </div>
       <List style={{ flexGrow: 1 }}>
-        <ListItem button>
+        <ListItem button component={Link} to="/products">
           <ListItemIcon><ShoppingCart style={{ color: "#FFFFFF" }} /></ListItemIcon>
           <ListItemText primary="PRODUCTS" style={{ color: "#FFFFFF" }} />
         </ListItem>
-        <ListItem button>
+        <ListItem button component={Link} to="/customers">
           <ListItemIcon><People style={{ color: "#FFFFFF" }} /></ListItemIcon>
           <ListItemText primary="CUSTOMERS" style={{ color: "#FFFFFF" }} />
         </ListItem>
-        <ListItem button>
+        <ListItem button component={Link} to="/categories">
           <ListItemIcon><Category style={{ color: "#FFFFFF" }} /></ListItemIcon>
-          <ListItemText primary="CATEGORY" style={{ color: "#FFFFFF" }} />
+          <ListItemText primary="CATEGORIES" style={{ color: "#FFFFFF" }} />
         </ListItem>
-        <ListItem button>
+        <ListItem button component={Link} to="/orders"> {/* Thêm đường dẫn cho Orders */}
           <ListItemIcon><Assignment style={{ color: "#FFFFFF" }} /></ListItemIcon>
           <ListItemText primary="ORDERS" style={{ color: "#FFFFFF" }} />
         </ListItem>

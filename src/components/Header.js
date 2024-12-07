@@ -1,11 +1,31 @@
 import React from "react";
+import { useLocation } from "react-router-dom"; 
 import SearchIcon from '@mui/icons-material/Search'; 
+
 const Header = () => {
+  const location = useLocation();
+
+  // Xác định tiêu đề dựa trên đường dẫn
+  const getTitle = () => {
+    switch (location.pathname) {
+      case "/products":
+        return "PRODUCTS";
+      case "/customers":
+        return "CUSTOMERS";
+      case "/categories": // Đảm bảo đường dẫn chính xác
+        return "CATEGORIES";
+      case "/orders": // Thêm đường dẫn cho Orders
+        return "ORDERS";
+      default:
+        return "WELCOME";
+    }
+  };
+
   return (
     <div style={{ background: "#1976d2", color: "#fff", padding: "10px", 
       display: "flex", justifyContent: "space-between", alignItems: "center",
       marginTop: "40px", marginLeft: "20px", marginRight: "20px" }}>
-      <h2 style={{ margin: 0 }}>PRODUCTS</h2>
+      <h2 style={{ margin: 0 }}>{getTitle()}</h2>
       <div style={{ display: "flex", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <input 
