@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from "@mui/material";
 
 const CategoriesList = () => {
   const categories = [
@@ -26,39 +26,46 @@ const CategoriesList = () => {
   ];
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {["#", "Category Name", "Actions"].map((header, index) => (
-              <TableCell 
-                key={index} 
-                style={{ 
-                  backgroundColor: "#1976d2", 
-                  color: "#fff", 
-                  textAlign: "center", 
-                  fontSize: "14px" 
-                }}
-              >
-                {header}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {categories.map((category) => (
-            <TableRow key={category.category_id}>
-              <TableCell>{category.category_id}</TableCell>
-              <TableCell>{category.category_name}</TableCell>
-              <TableCell style={{ display: "flex", justifyContent: "center" }}>
-                <Button variant="contained" color="primary" size="small" style={{ marginRight: "10px" }}>Edit</Button>
-                <Button variant="contained" color="secondary" size="small">Del</Button>
-              </TableCell>
+    <Box>
+      <Box display="flex" justifyContent="flex-start" marginBottom={2}>
+        <Button variant="contained" color="primary" size="medium" style={{ marginLeft: "10px" }}>
+          Thêm Mới
+        </Button>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {["#", "Category Name", "Actions"].map((header, index) => (
+                <TableCell 
+                  key={index} 
+                  style={{ 
+                    backgroundColor: "#1976d2", 
+                    color: "#fff", 
+                    textAlign: "center", 
+                    fontSize: "14px" 
+                  }}
+                >
+                  {header}
+                </TableCell>
+              ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {categories.map((category) => (
+              <TableRow key={category.category_id}>
+                <TableCell>{category.category_id}</TableCell>
+                <TableCell>{category.category_name}</TableCell>
+                <TableCell style={{ display: "flex", justifyContent: "center" }}>
+                  <Button variant="contained" color="primary" size="small" style={{ marginRight: "10px" }}>Edit</Button>
+                  <Button variant="contained" color="secondary" size="small">Del</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
