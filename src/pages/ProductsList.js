@@ -1,33 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from "@mui/material";
+import { message } from 'antd';
+import axios from "axios";
+
+import { getProduct } from '../services/AdminService';
 
 const ProductsList = () => {
-  const products = [
-    {
-      product_id: "P001",
-      product_name: "Sản phẩm A",
-      image_path: "src/assets/nu1.png", // Đảm bảo đường dẫn đúng
-      inventory_quantity: 100,
-      original_price: 200000,
-      sale_price: 180000,
-      description: "Mô tả sản phẩm A",
-      create_time: "2023-01-01",
-      update_time: "2023-06-01",
-      category_id: "C001",
-    },
-    {
-      product_id: "P002",
-      product_name: "Sản phẩm B",
-      image_path: "src/assets/product_b.jpg", // Đảm bảo đường dẫn đúng
-      inventory_quantity: 50,
-      original_price: 300000,
-      sale_price: 250000,
-      description: "Mô tả sản phẩm B",
-      create_time: "2023-02-01",
-      update_time: "2023-06-15",
-      category_id: "C002",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    loadProduct();
+  }, []);
+  
+  const loadProduct = async () => {
+    try {
+      const productData = await getProduct();
+      const fullProduct = productData.map(product => {
+        return axios.get(`http://localhost:5281/api/Category/${product.category_id}?id=${product.category_id}`)
+          .then(categoryResponse => {
+            const categoryName = categoryResponse.data.category_name;
+            return { ...product, category_name: categoryName };
+          });
+        });
+
+      Promise.all(fullProduct)
+        .then(updatedProducts => {
+            setProducts(updatedProducts);
+        });
+    } catch (error) {
+      message.error('Có lỗi xảy ra khi tải Product: ' + error);
+    }
+  };
 
   return (
     <Box>
@@ -47,9 +50,6 @@ const ProductsList = () => {
                 "Inventory Quantity",
                 "Original Price",
                 "Sale Price",
-                "Description",
-                "Create Time",
-                "Update Time",
                 "Category Name",
                 "Actions",
               ].map((header, index) => (
@@ -81,11 +81,11 @@ const ProductsList = () => {
                 </TableCell>
                 <TableCell>{product.inventory_quantity}</TableCell>
                 <TableCell>{product.original_price.toLocaleString()} VNĐ</TableCell>
-                <TableCell>{product.sale_price.toLocaleString()} VNĐ</TableCell>
-                <TableCell>{product.description}</TableCell>
+                <TableCell>{product.unit_price.toLocaleString()} VNĐ</TableCell>
+                {/* <TableCell>{product.description}</TableCell>
                 <TableCell>{product.create_time}</TableCell>
-                <TableCell>{product.update_time}</TableCell>
-                <TableCell>{product.category_id}</TableCell>
+                <TableCell>{product.update_time}</TableCell> */}
+                <TableCell>{product.category_name}</TableCell>
                 <TableCell style={{ display: "flex", justifyContent: "center" }}>
                   <Button variant="contained" color="primary" size="small" style={{ marginRight: "10px" }}>
                     Edit
