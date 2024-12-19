@@ -1,24 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom"; 
 import SearchIcon from '@mui/icons-material/Search'; 
 
-const Header = () => {
+const Header = ({ onSearch }) => {
   const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Xác định tiêu đề dựa trên đường dẫn
   const getTitle = () => {
     switch (location.pathname) {
       case "/products":
-        return "PRODUCTS";
+        return "SẢN PHẨM";
       case "/customers":
-        return "CUSTOMERS";
-      case "/categories": // Đảm bảo đường dẫn chính xác
-        return "CATEGORIES";
-      case "/orders": // Thêm đường dẫn cho Orders
-        return "ORDERS";
+        return "KHÁCH HÀNG";
+      case "/categories":
+        return "DANH MỤC";
+      case "/orders":
+        return "HÓA ĐƠN";
       default:
-        return "WELCOME";
+        return "YOU ARE WELCOME";
     }
+  };
+
+  const filtered = (value) => {
+    setSearchQuery(value);
+    onSearch(value); // Truyền giá trị tìm kiếm lên cha
   };
 
   return (
@@ -37,6 +43,8 @@ const Header = () => {
               borderRadius: "4px 0 0 4px", 
               border: "none" 
             }} 
+            value={searchQuery}
+            onChange={(e) => filtered(e.target.value)}
           />
           <button style={{ 
             background: "#4CAF50", 

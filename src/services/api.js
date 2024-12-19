@@ -7,9 +7,9 @@ const API_URL = 'http://localhost:5281';
 // Tạo một instance của Axios
 const api = axios.create({
     baseURL: API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    // headers: {
+    //     'Content-Type': 'application/json',
+    // },
 });
 
 // Thêm Interceptor cho request (thêm token vào headers)
