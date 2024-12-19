@@ -18,23 +18,23 @@ const Sidebar = () => {
       <List style={{ flexGrow: 1 }}>
         <ListItem button component={Link} to="/products">
           <ListItemIcon><ShoppingCart style={{ color: "#FFFFFF" }} /></ListItemIcon>
-          <ListItemText primary="PRODUCTS" style={{ color: "#FFFFFF" }} />
+          <ListItemText primary="SẢN PHẨM" style={{ color: "#FFFFFF" }} />
         </ListItem>
         <ListItem button component={Link} to="/customers">
           <ListItemIcon><People style={{ color: "#FFFFFF" }} /></ListItemIcon>
-          <ListItemText primary="CUSTOMERS" style={{ color: "#FFFFFF" }} />
+          <ListItemText primary="KHÁCH HÀNG" style={{ color: "#FFFFFF" }} />
         </ListItem>
         <ListItem button component={Link} to="/categories">
           <ListItemIcon><Category style={{ color: "#FFFFFF" }} /></ListItemIcon>
-          <ListItemText primary="CATEGORIES" style={{ color: "#FFFFFF" }} />
+          <ListItemText primary="DANH MỤC" style={{ color: "#FFFFFF" }} />
         </ListItem>
         <ListItem button component={Link} to="/orders"> {/* Thêm đường dẫn cho Orders */}
           <ListItemIcon><Assignment style={{ color: "#FFFFFF" }} /></ListItemIcon>
-          <ListItemText primary="ORDERS" style={{ color: "#FFFFFF" }} />
+          <ListItemText primary="HÓA ĐƠN" style={{ color: "#FFFFFF" }} />
         </ListItem>
         <ListItem button>
           <ListItemIcon><ExitToApp style={{ color: "#FFFFFF" }} /></ListItemIcon>
-          <ListItemText primary="EXIT" style={{ color: "#FFFFFF" }} />
+          <ListItemText primary="THOÁT" style={{ color: "#FFFFFF" }} />
         </ListItem>
       </List>
     </div>

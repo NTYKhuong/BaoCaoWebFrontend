@@ -1,16 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from "@mui/material";
-import { message } from 'antd';
+import { message, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import axios from "axios";
 
-import { getProduct } from '../services/AdminService';
+import { getProduct, updateProduct, createProduct, deleteProduct, getProductById } from '../services/AdminService';
+import ProductsForm from "../components/Products/ProductsForm";
 
-const ProductsList = () => {
+const { confirm } = Modal;
+
+const ProductsList = ({ searchProduct }) => {
   const [products, setProducts] = useState([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   useEffect(() => {
-    loadProduct();
-  }, []);
+    if(searchProduct !== "") {
+      const filteredProducts = products.filter((product) =>
+        product.product_name.toLowerCase().includes(searchProduct.toLowerCase()) ||
+        product.inventory_quantity.toString().includes(searchProduct.toString()) ||
+        product.original_price.toString().includes(searchProduct.toString()) ||
+        product.unit_price.toString().includes(searchProduct.toString())
+      );
+      setProducts(filteredProducts);
+    }
+    else {
+      loadProduct();
+    }
+  }, [searchProduct]);
   
   const loadProduct = async () => {
     try {
@@ -18,7 +35,7 @@ const ProductsList = () => {
       const fullProduct = productData.map(product => {
         return axios.get(`http://localhost:5281/api/Category/${product.category_id}?id=${product.category_id}`)
           .then(categoryResponse => {
-            const categoryName = categoryResponse.data.category_name;
+            const categoryName = categoryResponse.data.data.category_name;
             return { ...product, category_name: categoryName };
           });
         });
@@ -32,27 +49,84 @@ const ProductsList = () => {
     }
   };
 
+  const handleDeleteProduct = async (id) => {
+    try {
+        await deleteProduct(id);
+        message.success('Xóa sản phẩm thành công');
+        loadProduct();
+    } catch (error) {
+        const errorMessage = error.message || 'Có lỗi xảy ra khi xóa sản phẩm!';
+        message.error(errorMessage);
+    }
+  };
+
+  const handleAddEditProduct = async (values) => {
+    try {
+      if (editingProduct) {
+        // console.log(editingProduct.product_id);
+        await updateProduct(editingProduct.product_id, values);
+        message.success('Cập nhật sản phẩm thành công');
+      } else {
+        await createProduct(values);
+        message.success('Thêm sản phẩm thành công');
+      }
+      loadProduct();
+      setIsOpenModal(false);
+    } catch (error) {
+      message.error('Có lỗi xảy ra khi thêm/sửa sản phẩm: ' + error);
+    }
+  };
+
+  const openModal = (Product = null) => {
+    setEditingProduct(Product);
+    setIsOpenModal(true);
+  };
+
+  const editProduct = async (id) => {
+    try {
+      setIsOpenModal(true);
+      const data = await getProductById(id);
+      setEditingProduct(data.data);
+    } catch (error) {
+      message.error('Có lỗi xảy ra khi sửa sản phẩm: ' + error);
+    }
+  };
+
+  const closeModal = () => {
+    setIsOpenModal(false);
+    setEditingProduct(null);
+  };
+
+  const handleDelete = (id) => {
+    confirm({
+        title: 'Bạn có chắc chắn muốn xóa sản phẩm này?',
+        icon: <ExclamationCircleOutlined />,
+        content: 'Thao tác này không thể hoàn tác!',
+        okText: 'Xóa',
+        okType: 'danger',
+        cancelText: 'Hủy',
+        onOk() {
+          handleDeleteProduct(id);
+        },
+        onCancel() {
+            console.log('Hủy thao tác xóa');
+        },
+    });
+  };
+
   return (
     <Box>
       <Box display="flex" justifyContent="flex-start" marginBottom={2}>
-        <Button variant="contained" color="primary" size="medium" style={{ marginLeft: "10px" }}>
+        <Button onClick={() => openModal()} variant="contained" color="primary" size="medium" style={{ marginLeft: "10px" }} >
           Thêm Mới
         </Button>
+        <ProductsForm visible={isOpenModal} onOk={(value) => handleAddEditProduct(value)} onCancel={closeModal} initialValues={editingProduct} />
       </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              {[
-                "#",
-                "Product Name",
-                "Image",
-                "Inventory Quantity",
-                "Original Price",
-                "Sale Price",
-                "Category Name",
-                "Actions",
-              ].map((header, index) => (
+              {["STT", "Tên sản phẩm", "Hình ảnh", "Số lượng", "Giá gốc", "Giá bán", "Loại", "Actions",].map((header, index) => (
                 <TableCell
                   key={index}
                   style={{
@@ -87,11 +161,11 @@ const ProductsList = () => {
                 <TableCell>{product.update_time}</TableCell> */}
                 <TableCell>{product.category_name}</TableCell>
                 <TableCell style={{ display: "flex", justifyContent: "center" }}>
-                  <Button variant="contained" color="primary" size="small" style={{ marginRight: "10px" }}>
-                    Edit
+                  <Button onClick={() => editProduct(product.product_id)} variant="contained" color="primary" size="small" style={{ marginRight: "10px" }}>
+                    Sửa
                   </Button>
-                  <Button variant="contained" color="secondary" size="small">
-                    Del
+                  <Button onClick={() => handleDelete(product.product_id)} variant="contained" color="secondary" size="small">
+                    Xóa
                   </Button>
                 </TableCell>
               </TableRow>
